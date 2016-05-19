@@ -1,12 +1,14 @@
 class Card
   def initialize(question, answer)
+    @question = question
+    @answer = answer
   end
 
   def question
-    "What is the capital of Alaska?"
+    @question
   end
 
   def answer
-    "Juneau"
+    @answer
   end
 end
