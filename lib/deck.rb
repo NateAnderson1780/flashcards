@@ -1,10 +1,9 @@
 class Deck
-  def initialize(cards)
-    @cards = cards
-  end
+  attr_accessor :cards
 
-  def cards
-    @cards
+  def initialize(cards)
+    # require 'pry';binding.pry
+    @cards = cards
   end
 
   def count

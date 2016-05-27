@@ -1,22 +1,24 @@
 gem 'minitest', '~> 5.0'
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/flashcards'
+require_relative '../lib/card'
 require_relative '../lib/guess'
 require_relative '../lib/deck'
 require_relative '../lib/round'
+require 'pry'
 
 class CardTest < Minitest::Test
   def test_card
     card = Card.new("What is the capital of Alaska?", "Juneau")
+
     assert_equal "What is the capital of Alaska?", card.question
-    card.answer
     assert_equal ("Juneau"), card.answer
   end
 
   def test_is_the_guess_correct
     card = Card.new("What is the capital of Alaska?", "Juneau")
     guess = Guess.new("Juneau", card)
+
     assert_equal card, guess.card
     assert_equal "Juneau", guess.response
     assert guess.correct?
@@ -26,6 +28,7 @@ class CardTest < Minitest::Test
   def test_is_the_guess_wrong
     card = Card.new("Which planet is closest to the sun?", "Mercury")
     guess = Guess.new("Saturn", card)
+
     assert_equal card, guess.card
     assert_equal "Saturn", guess.response
     refute guess.correct?
@@ -46,12 +49,18 @@ class CardTest < Minitest::Test
     card_2 = Card.new("Approximately how many miles are in one astronomical unit?", "93,000,000")
     deck = Deck.new([card_1, card_2])
     round = Round.new(deck)
+
     assert_equal deck, round.deck
     assert_equal [], round.guesses
     assert_equal card_1, round.current_card
-    assert_equal round.guesses, round.record_guess("Juneau")
+    assert_instance_of Guess, round.record_guess("Juneau")
+    binding.pry
     assert_equal 1, round.guesses.count
-    assert_equal round.feedback, round.guesses.first.feedback
-
+    assert_equal "Correct!", round.guesses.first.feedback
+    assert_equal card_2, round.current_card
+    assert_instance_of Guess, round.record_guess("2")
+    assert_equal "Incorrect.", round.guesses.last.feedback
+    assert_equal 1, round.number_correct
+    # assert_equal 50, round.percent_correct
   end
 end
